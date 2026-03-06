@@ -42,8 +42,10 @@ export const authConfig = {
       }
 
       // Protected customer routes: require login
+      // Allow /checkout/success publicly (Stripe redirects back here)
       const protectedPaths = ["/checkout", "/orders", "/profile"]
       if (protectedPaths.some((p) => path.startsWith(p))) {
+        if (path.startsWith("/checkout/success")) return true
         return isLoggedIn
       }
 
