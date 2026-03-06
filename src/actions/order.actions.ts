@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/db"
 import { auth } from "@/lib/auth"
+import { stripe } from "@/lib/stripe"
 
 function generateOrderNumber(): string {
   const timestamp = Date.now().toString(36).toUpperCase()
@@ -202,12 +203,86 @@ export async function getOrderByStripeSession(sessionId: string) {
   const session = await auth()
   if (!session?.user?.id) return null
 
-  return db.order.findFirst({
+  const order = await db.order.findFirst({
     where: {
       stripeSessionId: sessionId,
       userId: session.user.id,
     },
   })
+
+  if (!order) return null
+
+  // If order is not yet marked as paid, check directly with Stripe
+  // (handles case where webhook hasn't arrived yet)
+  if (!order.isPaid) {
+    try {
+      const stripeSession = await stripe.checkout.sessions.retrieve(sessionId)
+
+      if (stripeSession.payment_status === "paid") {
+        const customerEmail =
+          stripeSession.customer_details?.email ||
+          stripeSession.customer_email ||
+          ""
+
+        const paymentIntentId =
+          typeof stripeSession.payment_intent === "string"
+            ? stripeSession.payment_intent
+            : stripeSession.payment_intent?.id || stripeSession.id
+
+        // Deduct stock (move from reserved → sold)
+        for (const item of order.items) {
+          const product = await db.product.findUnique({
+            where: { id: item.productId },
+            select: { variants: true },
+          })
+
+          if (!product) continue
+
+          const updatedVariants = product.variants.map((v) => {
+            if (v.sku === item.variantSku) {
+              return {
+                ...v,
+                reservedStock: Math.max(0, v.reservedStock - item.quantity),
+                stock: v.stock - item.quantity,
+              }
+            }
+            return v
+          })
+
+          await db.product.update({
+            where: { id: item.productId },
+            data: {
+              variants: { set: updatedVariants },
+              totalSold: { increment: item.quantity },
+            },
+          })
+        }
+
+        // Update order to PAID
+        const updatedOrder = await db.order.update({
+          where: { id: order.id },
+          data: {
+            isPaid: true,
+            paidAt: new Date(),
+            status: "CONFIRMED",
+            paymentMethod: "Stripe",
+            paymentResult: {
+              id: paymentIntentId,
+              status: stripeSession.payment_status,
+              emailAddress: customerEmail,
+              pricePaid: (stripeSession.amount_total! / 100).toFixed(2),
+            },
+          },
+        })
+
+        return updatedOrder
+      }
+    } catch (error) {
+      console.error("Failed to verify payment with Stripe:", error)
+    }
+  }
+
+  return order
 }
 
 export async function getUserOrders() {
