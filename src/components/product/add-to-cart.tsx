@@ -42,25 +42,25 @@ export function AddToCart({ product, variant, disabled }: AddToCartProps) {
   }
 
   return (
-    <div className="flex flex-col gap-3 sm:flex-row">
+    <div className="flex w-full flex-col gap-3">
       {/* Quantity selector */}
-      <div className="flex h-12 items-center border">
+      <div className="flex h-14 items-center border">
         <button
           onClick={() => setQuantity(Math.max(1, quantity - 1))}
           disabled={quantity <= 1 || disabled}
-          className="flex h-full w-10 items-center justify-center text-muted-foreground transition-colors hover:text-foreground disabled:opacity-30"
+          className="flex h-full w-14 items-center justify-center text-muted-foreground transition-colors hover:text-foreground disabled:opacity-30"
         >
-          <Minus className="h-3.5 w-3.5" />
+          <Minus className="h-4 w-4" />
         </button>
-        <span className="flex h-full w-10 items-center justify-center border-x text-sm font-medium">
+        <span className="flex h-full flex-1 items-center justify-center border-x text-base font-medium">
           {quantity}
         </span>
         <button
           onClick={() => setQuantity(Math.min(maxQty, quantity + 1))}
           disabled={quantity >= maxQty || disabled}
-          className="flex h-full w-10 items-center justify-center text-muted-foreground transition-colors hover:text-foreground disabled:opacity-30"
+          className="flex h-full w-14 items-center justify-center text-muted-foreground transition-colors hover:text-foreground disabled:opacity-30"
         >
-          <Plus className="h-3.5 w-3.5" />
+          <Plus className="h-4 w-4" />
         </button>
       </div>
 
@@ -69,7 +69,7 @@ export function AddToCart({ product, variant, disabled }: AddToCartProps) {
         onClick={handleAdd}
         disabled={disabled || isAdded}
         size="lg"
-        className="relative h-12 flex-1 overflow-hidden rounded-none bg-black text-xs font-medium tracking-wide-luxury text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200"
+        className="relative h-14 w-full overflow-hidden rounded-none bg-black text-sm font-medium tracking-wide-luxury text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200"
       >
         <AnimatePresence mode="wait">
           {isAdded ? (
