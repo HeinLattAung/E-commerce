@@ -107,7 +107,7 @@ export function CartSheet() {
         </SheetHeader>
 
         {items.length === 0 ? (
-          <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
+          <div className="flex flex-1 flex-col items-center justify-center gap-4 px-4 text-center">
             <ShoppingBag className="h-12 w-12 text-muted-foreground/40" strokeWidth={1} />
             <div>
               <p className="font-medium">Your bag is empty</p>
@@ -124,7 +124,7 @@ export function CartSheet() {
           </div>
         ) : (
           <>
-            <div className="flex-1 overflow-y-auto scrollbar-hide">
+            <div className="flex-1 overflow-y-auto px-4 scrollbar-hide">
               <AnimatePresence mode="popLayout">
                 {items.map((item) => (
                   <div key={`${item.productId}-${item.variantSku}`}>
@@ -135,7 +135,7 @@ export function CartSheet() {
               </AnimatePresence>
             </div>
 
-            <div className="border-t pt-4">
+            <div className="border-t px-4 pt-4 pb-4">
               <div className="space-y-1.5 text-sm">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Subtotal</span>
