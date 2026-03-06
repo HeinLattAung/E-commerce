@@ -109,7 +109,7 @@ export default async function OrderDetailPage({ params }: Props) {
         {/* Summary sidebar */}
         <div className="space-y-6">
           {/* Price summary */}
-          <div className="rounded-lg border p-5">
+          <div className="rounded-lg border p-4 sm:p-5">
             <h2 className="text-lg font-medium">Order Summary</h2>
             <div className="mt-4 space-y-2 text-sm">
               <div className="flex justify-between">
@@ -137,7 +137,7 @@ export default async function OrderDetailPage({ params }: Props) {
           </div>
 
           {/* Shipping address */}
-          <div className="rounded-lg border p-5">
+          <div className="rounded-lg border p-4 sm:p-5">
             <h2 className="text-lg font-medium">Shipping Address</h2>
             <div className="mt-3 text-sm text-muted-foreground">
               <p className="font-medium text-foreground">
@@ -155,7 +155,7 @@ export default async function OrderDetailPage({ params }: Props) {
 
           {/* Payment info */}
           {order.paymentResult && (
-            <div className="rounded-lg border p-5">
+            <div className="rounded-lg border p-4 sm:p-5">
               <h2 className="text-lg font-medium">Payment</h2>
               <div className="mt-3 space-y-1 text-sm">
                 <div className="flex justify-between">

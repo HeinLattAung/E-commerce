@@ -8,7 +8,7 @@ const categories = [
     slug: "outerwear",
     description: "Timeless layers",
     image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&q=80",
-    span: "md:col-span-2 md:row-span-2",
+    span: "col-span-2 row-span-2 md:col-span-2 md:row-span-2",
   },
   {
     name: "Leather Goods",
@@ -55,7 +55,7 @@ export function CategoriesShowcase() {
         </div>
 
         {/* Bento grid */}
-        <div className="mt-14 grid auto-rows-[200px] grid-cols-1 gap-4 md:grid-cols-4 md:auto-rows-[220px]">
+        <div className="mt-14 grid auto-rows-[200px] grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4 md:auto-rows-[220px]">
           {categories.map((cat) => (
             <div key={cat.slug} className={cat.span}>
               <Link

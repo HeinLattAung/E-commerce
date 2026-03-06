@@ -87,8 +87,8 @@ export default async function ProductsPage({ searchParams }: Props) {
 
         {/* Sort */}
         <div className="flex items-center gap-2">
-          <span className="text-xs text-muted-foreground">Sort by:</span>
-          <div className="flex gap-1">
+          <span className="hidden text-xs text-muted-foreground sm:inline">Sort by:</span>
+          <div className="flex flex-wrap gap-1">
             {sortOptions.map((opt) => (
               <Link
                 key={opt.value}

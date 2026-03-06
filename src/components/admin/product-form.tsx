@@ -264,7 +264,7 @@ export function ProductForm({ categories, product, onSuccess }: Props) {
           {variants.map((v, i) => (
             <div
               key={i}
-              className="grid grid-cols-2 gap-2 rounded-lg border p-3 sm:grid-cols-7"
+              className="grid grid-cols-2 gap-2 rounded-lg border p-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7"
             >
               <div>
                 <Label className="text-xs">SKU</Label>

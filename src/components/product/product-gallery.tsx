@@ -23,7 +23,7 @@ export function ProductGallery({ images }: ProductGalleryProps) {
             key={i}
             onClick={() => setSelected(i)}
             className={cn(
-              "relative h-16 w-16 flex-shrink-0 overflow-hidden border transition-all md:h-20 md:w-20",
+              "relative h-14 w-14 flex-shrink-0 overflow-hidden border transition-all sm:h-16 sm:w-16 md:h-20 md:w-20",
               i === selected
                 ? "border-foreground"
                 : "border-transparent opacity-60 hover:opacity-100"
@@ -72,7 +72,7 @@ export function ProductGallerySkeleton() {
     <div className="flex flex-col-reverse gap-4 md:flex-row">
       <div className="flex gap-2 md:flex-col">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="h-16 w-16 animate-pulse bg-muted md:h-20 md:w-20" />
+          <div key={i} className="h-14 w-14 animate-pulse bg-muted sm:h-16 sm:w-16 md:h-20 md:w-20" />
         ))}
       </div>
       <div className="flex-1 aspect-[3/4] animate-pulse bg-muted" />

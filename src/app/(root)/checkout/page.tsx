@@ -154,7 +154,7 @@ export default function CheckoutPage() {
 
         {/* Order summary */}
         <div className="lg:col-span-2">
-          <div className="rounded-lg border p-6">
+          <div className="rounded-lg border p-4 sm:p-6">
             <h2 className="text-lg font-medium">Order Summary</h2>
             <div className="mt-4 space-y-4">
               {items.map((item) => (

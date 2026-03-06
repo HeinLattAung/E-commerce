@@ -37,7 +37,7 @@ export default async function ProductDetailPage({ params }: Props) {
     <div className="container mx-auto px-4 py-8 lg:py-16">
       {/* Breadcrumb */}
       <nav className="mb-8 text-xs text-muted-foreground">
-        <ol className="flex items-center gap-1.5">
+        <ol className="flex flex-wrap items-center gap-1.5">
           <li><a href="/" className="hover:text-foreground">Home</a></li>
           <li>/</li>
           <li><a href="/products" className="hover:text-foreground">Shop</a></li>

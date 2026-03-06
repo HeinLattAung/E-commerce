@@ -140,10 +140,10 @@ export function CategoriesClient({ categories }: Props) {
               <thead>
                 <tr className="border-b bg-muted/50 text-left">
                   <th className="px-4 py-3 font-medium">Category</th>
-                  <th className="px-4 py-3 font-medium">Description</th>
-                  <th className="px-4 py-3 font-medium">Parent</th>
+                  <th className="hidden px-4 py-3 font-medium md:table-cell">Description</th>
+                  <th className="hidden px-4 py-3 font-medium sm:table-cell">Parent</th>
                   <th className="px-4 py-3 font-medium">Products</th>
-                  <th className="px-4 py-3 font-medium">Subcategories</th>
+                  <th className="hidden px-4 py-3 font-medium lg:table-cell">Subcategories</th>
                   <th className="px-4 py-3 font-medium text-right">Actions</th>
                 </tr>
               </thead>
@@ -184,12 +184,12 @@ export function CategoriesClient({ categories }: Props) {
                           </div>
                         </div>
                       </td>
-                      <td className="max-w-[200px] px-4 py-3">
+                      <td className="hidden max-w-[200px] px-4 py-3 md:table-cell">
                         <p className="truncate text-muted-foreground">
                           {cat.description || "—"}
                         </p>
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="hidden px-4 py-3 sm:table-cell">
                         {cat.parent ? (
                           <Badge variant="outline" className="text-xs">
                             {cat.parent.name}
@@ -203,7 +203,7 @@ export function CategoriesClient({ categories }: Props) {
                           {cat._count.products}
                         </Badge>
                       </td>
-                      <td className="px-4 py-3 text-muted-foreground">
+                      <td className="hidden px-4 py-3 text-muted-foreground lg:table-cell">
                         {cat.children.length > 0
                           ? cat.children.map((c) => c.name).join(", ")
                           : "—"}

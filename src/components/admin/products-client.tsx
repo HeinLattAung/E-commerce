@@ -106,10 +106,10 @@ export function ProductsClient({ products, categories }: Props) {
               <thead>
                 <tr className="border-b bg-muted/50 text-left">
                   <th className="px-4 py-3 font-medium">Product</th>
-                  <th className="px-4 py-3 font-medium">Category</th>
+                  <th className="hidden px-4 py-3 font-medium sm:table-cell">Category</th>
                   <th className="px-4 py-3 font-medium">Price</th>
-                  <th className="px-4 py-3 font-medium">Stock</th>
-                  <th className="px-4 py-3 font-medium">Status</th>
+                  <th className="hidden px-4 py-3 font-medium md:table-cell">Stock</th>
+                  <th className="hidden px-4 py-3 font-medium sm:table-cell">Status</th>
                   <th className="px-4 py-3 font-medium text-right">Actions</th>
                 </tr>
               </thead>
@@ -157,13 +157,13 @@ export function ProductsClient({ products, categories }: Props) {
                             </div>
                           </div>
                         </td>
-                        <td className="px-4 py-3 text-muted-foreground">
+                        <td className="hidden px-4 py-3 text-muted-foreground sm:table-cell">
                           {product.category.name}
                         </td>
                         <td className="px-4 py-3">
                           {formatPrice(product.basePrice)}
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="hidden px-4 py-3 md:table-cell">
                           <span
                             className={
                               totalStock === 0
@@ -176,7 +176,7 @@ export function ProductsClient({ products, categories }: Props) {
                             {totalStock}
                           </span>
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="hidden px-4 py-3 sm:table-cell">
                           <div className="flex gap-1">
                             {product.isActive ? (
                               <Badge variant="default" className="bg-emerald-600 text-xs">
@@ -233,7 +233,7 @@ export function ProductsClient({ products, categories }: Props) {
 
       {/* Create / Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto">
+        <DialogContent className="max-h-[90vh] w-[95vw] max-w-3xl overflow-y-auto sm:w-auto">
           <DialogHeader>
             <DialogTitle className="font-serif text-xl">
               {editProduct ? "Edit Product" : "Create Product"}

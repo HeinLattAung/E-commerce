@@ -28,8 +28,8 @@ export default async function AdminUsersPage() {
                   <th className="px-4 py-3 font-medium">User</th>
                   <th className="px-4 py-3 font-medium">Role</th>
                   <th className="px-4 py-3 font-medium">Orders</th>
-                  <th className="px-4 py-3 font-medium">Reviews</th>
-                  <th className="px-4 py-3 font-medium">Joined</th>
+                  <th className="hidden px-4 py-3 font-medium sm:table-cell">Reviews</th>
+                  <th className="hidden px-4 py-3 font-medium md:table-cell">Joined</th>
                 </tr>
               </thead>
               <tbody>
@@ -60,10 +60,10 @@ export default async function AdminUsersPage() {
                     <td className="px-4 py-3 text-muted-foreground">
                       {user._count.orders}
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground">
+                    <td className="hidden px-4 py-3 text-muted-foreground sm:table-cell">
                       {user._count.reviews}
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground">
+                    <td className="hidden px-4 py-3 text-muted-foreground md:table-cell">
                       {formatDate(user.createdAt)}
                     </td>
                   </tr>

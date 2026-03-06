@@ -111,10 +111,10 @@ export function OrdersClient({ orders }: Props) {
               <thead>
                 <tr className="border-b bg-muted/50 text-left">
                   <th className="px-4 py-3 font-medium">Order</th>
-                  <th className="px-4 py-3 font-medium">Customer</th>
-                  <th className="px-4 py-3 font-medium">Date</th>
+                  <th className="hidden px-4 py-3 font-medium sm:table-cell">Customer</th>
+                  <th className="hidden px-4 py-3 font-medium md:table-cell">Date</th>
                   <th className="px-4 py-3 font-medium">Total</th>
-                  <th className="px-4 py-3 font-medium">Payment</th>
+                  <th className="hidden px-4 py-3 font-medium sm:table-cell">Payment</th>
                   <th className="px-4 py-3 font-medium">Status</th>
                 </tr>
               </thead>
@@ -140,7 +140,7 @@ export function OrdersClient({ orders }: Props) {
                           </p>
                         </div>
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="hidden px-4 py-3 sm:table-cell">
                         <div className="flex items-center gap-2">
                           <Avatar className="h-7 w-7">
                             <AvatarImage src={order.user.image || ""} />
@@ -156,13 +156,13 @@ export function OrdersClient({ orders }: Props) {
                           </div>
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-muted-foreground">
+                      <td className="hidden px-4 py-3 text-muted-foreground md:table-cell">
                         {formatDate(order.createdAt)}
                       </td>
                       <td className="px-4 py-3 font-medium">
                         {formatPrice(order.totalPrice)}
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="hidden px-4 py-3 sm:table-cell">
                         {order.isPaid ? (
                           <Badge variant="default" className="bg-emerald-600 text-xs">
                             Paid

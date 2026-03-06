@@ -41,7 +41,7 @@ export function SearchBar() {
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search..."
               autoFocus
-              className="h-8 w-40 pl-8 text-sm sm:w-56"
+              className="h-8 w-32 pl-8 text-sm sm:w-40 md:w-56"
             />
           </div>
           <Button

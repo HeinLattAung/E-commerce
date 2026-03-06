@@ -36,7 +36,7 @@ export function Newsletter() {
 
         <form
           onSubmit={(e) => e.preventDefault()}
-          className="mx-auto mt-8 flex max-w-sm flex-col gap-3 sm:flex-row"
+          className="mx-auto mt-8 flex w-full max-w-sm flex-col gap-3 px-4 sm:max-w-md sm:flex-row sm:px-0"
         >
           <Input
             type="email"
