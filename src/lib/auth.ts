@@ -7,6 +7,7 @@ import { authConfig } from "@/lib/auth.config"
 
 export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
   ...authConfig,
+  trustHost: true,
 
   // Override providers with full DB-dependent implementations
   providers: [
