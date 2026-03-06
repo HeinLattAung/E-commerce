@@ -1,0 +1,163 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ───────────────────────────────────────────────
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+// ─── Composite Types (embedded documents) ────────────────
+
+type Address {
+  fullName String
+  street   String
+  city     String
+  state    String
+  zipCode  String
+  country  String
+  phone    String
+}
+
+type PaymentResult {
+  id           String
+  status       String
+  emailAddress String
+  pricePaid    String
+}
+
+type ProductImage {
+  url      String
+  alt      String
+  position Int
+}
+
+type ProductVariant {
+  sku           String
+  size          String
+  color         String
+  price         Float
+  comparePrice  Float?
+  stock         Int
+  reservedStock Int    @default(0)
+}
+
+type OrderItem {
+  productId   String
+  variantSku  String
+  name        String
+  slug        String
+  image       String
+  size        String
+  color       String
+  price       Float
+  quantity    Int
+}
+
+// ─── Models ──────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  email         String    @unique
+  password      String?
+  image         String?
+  role          Role      @default(USER)
+  addresses     Address[]
+  wishlist      String[]  @db.ObjectId
+  emailVerified DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  reviews Review[]
+  orders  Order[]
+}
+
+model Product {
+  id           String           @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  slug         String           @unique
+  description  String
+  basePrice    Float
+  images       ProductImage[]
+  variants     ProductVariant[]
+  featured     Boolean          @default(false)
+  isActive     Boolean          @default(true)
+  tags         String[]
+  categoryId   String           @db.ObjectId
+  category     Category         @relation(fields: [categoryId], references: [id])
+  reviews      Review[]
+  rating       Float            @default(0)
+  numReviews   Int              @default(0)
+  totalSold    Int              @default(0)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+}
+
+model Category {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  slug        String     @unique
+  description String?
+  image       String?
+  parentId    String?    @db.ObjectId
+  parent      Category?  @relation("CategoryChildren", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  children    Category[] @relation("CategoryChildren")
+  products    Product[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Order {
+  id               String         @id @default(auto()) @map("_id") @db.ObjectId
+  orderNumber      String         @unique
+  userId           String         @db.ObjectId
+  user             User           @relation(fields: [userId], references: [id])
+  items            OrderItem[]
+  shippingAddress  Address
+  paymentMethod    String         @default("Stripe")
+  paymentResult    PaymentResult?
+  stripeSessionId  String?
+  itemsPrice       Float
+  shippingPrice    Float
+  taxPrice         Float
+  totalPrice       Float
+  status           OrderStatus    @default(PENDING)
+  isPaid           Boolean        @default(false)
+  paidAt           DateTime?
+  isDelivered      Boolean        @default(false)
+  deliveredAt      DateTime?
+  notes            String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+}
+
+model Review {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  productId String   @db.ObjectId
+  product   Product  @relation(fields: [productId], references: [id])
+  rating    Int
+  title     String
+  comment   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
