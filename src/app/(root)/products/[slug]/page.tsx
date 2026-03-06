@@ -34,7 +34,7 @@ export default async function ProductDetailPage({ params }: Props) {
   const relatedProducts = await getRelatedProducts(product.id, product.categoryId)
 
   return (
-    <div className="container mx-auto px-4 py-8 lg:py-16">
+    <div className="container mx-auto px-4 pt-32 pb-8 lg:pt-36 lg:pb-16">
       {/* Breadcrumb */}
       <nav className="mb-8 text-xs text-muted-foreground">
         <ol className="flex flex-wrap items-center gap-1.5">
@@ -79,7 +79,7 @@ export default async function ProductDetailPage({ params }: Props) {
           <h2 className="font-serif text-2xl font-bold tracking-tight sm:text-3xl">
             You May Also Like
           </h2>
-          <div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-x-6 sm:gap-y-10 md:grid-cols-3 lg:grid-cols-4">
             {relatedProducts.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}

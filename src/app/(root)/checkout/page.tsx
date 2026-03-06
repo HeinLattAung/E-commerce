@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -11,7 +12,8 @@ import { useCartStore } from "@/store/cart-store"
 import { createOrder } from "@/actions/order.actions"
 import { createCheckoutSession } from "@/actions/stripe.actions"
 import { formatPrice } from "@/lib/utils"
-import { Loader2, Lock } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { Loader2, Lock, ArrowLeft, MapPin, CreditCard, CheckCircle2 } from "lucide-react"
 import { toast } from "sonner"
 import Image from "next/image"
 
@@ -104,9 +106,55 @@ export default function CheckoutPage() {
     )
   }
 
+  const steps = [
+    { label: "Shipping", icon: MapPin },
+    { label: "Payment", icon: CreditCard },
+    { label: "Confirmation", icon: CheckCircle2 },
+  ]
+
   return (
-    <div className="container mx-auto px-4 pt-32 pb-8 lg:pt-36 lg:pb-16">
+    <div className="container mx-auto px-4 pt-32 pb-8 md:px-8 lg:pt-36 lg:pb-16">
+      {/* Back to Cart */}
+      <Button asChild variant="ghost" size="sm" className="mb-4 -ml-2 gap-1.5 text-muted-foreground">
+        <Link href="/cart">
+          <ArrowLeft className="h-4 w-4" />
+          Back to Cart
+        </Link>
+      </Button>
+
       <h1 className="font-serif text-3xl font-bold tracking-tight">Checkout</h1>
+
+      {/* Stepper */}
+      <div className="mt-6 flex items-center justify-center gap-0">
+        {steps.map((step, i) => (
+          <div key={step.label} className="flex items-center">
+            <div className="flex items-center gap-2">
+              <div
+                className={cn(
+                  "flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium",
+                  i === 0
+                    ? "bg-foreground text-background"
+                    : "bg-muted text-muted-foreground"
+                )}
+              >
+                <step.icon className="h-4 w-4" />
+              </div>
+              <span
+                className={cn(
+                  "hidden text-sm sm:inline",
+                  i === 0 ? "font-medium" : "text-muted-foreground"
+                )}
+              >
+                {step.label}
+              </span>
+            </div>
+            {i < steps.length - 1 && (
+              <div className="mx-3 h-px w-8 bg-border sm:mx-4 sm:w-12" />
+            )}
+          </div>
+        ))}
+      </div>
+
       <Separator className="my-6" />
 
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-5">

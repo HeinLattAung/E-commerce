@@ -39,7 +39,7 @@ export default function WishlistPage() {
       <Separator className="my-6" />
 
       {loading ? (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
           {Array.from({ length: items.length || 4 }).map((_, i) => (
             <div key={i} className="animate-pulse">
               <div className="aspect-[3/4] rounded bg-muted" />
@@ -63,7 +63,7 @@ export default function WishlistPage() {
           </Button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
           {products.map((product) => {
             const primaryImage = product.images[0]
             const lowestVariant = product.variants.reduce(

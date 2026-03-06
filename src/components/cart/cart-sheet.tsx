@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
@@ -83,9 +84,10 @@ function CartItemRow({ item }: { item: CartItem }) {
 
 export function CartSheet() {
   const { items, totalItems, itemsPrice, shippingPrice, totalPrice } = useCart()
+  const [open, setOpen] = useState(false)
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button variant="ghost" size="icon" className="relative">
           <ShoppingBag className="h-[18px] w-[18px]" strokeWidth={1.5} />
@@ -149,13 +151,13 @@ export function CartSheet() {
                 <span>Total</span>
                 <span>{formatPrice(totalPrice)}</span>
               </div>
-              <Button asChild className="mt-4 w-full" size="lg">
+              <Button asChild className="mt-4 w-full" size="lg" onClick={() => setOpen(false)}>
                 <Link href="/checkout">
                   Proceed to Checkout
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild variant="link" className="mt-1 w-full text-muted-foreground">
+              <Button asChild variant="link" className="mt-1 w-full text-muted-foreground" onClick={() => setOpen(false)}>
                 <Link href="/cart">View Full Cart</Link>
               </Button>
             </div>

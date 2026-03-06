@@ -69,7 +69,7 @@ export function AddToCart({ product, variant, disabled }: AddToCartProps) {
         onClick={handleAdd}
         disabled={disabled || isAdded}
         size="lg"
-        className="relative h-12 flex-1 overflow-hidden rounded-none text-xs font-medium tracking-wide-luxury"
+        className="relative h-12 flex-1 overflow-hidden rounded-none bg-black text-xs font-medium tracking-wide-luxury text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200"
       >
         <AnimatePresence mode="wait">
           {isAdded ? (
