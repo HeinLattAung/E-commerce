@@ -24,8 +24,8 @@ export default async function HomePage() {
     <>
       <Hero />
       <ValueStrip />
-      <FeaturedProducts products={products} unavailable={unavailable} />
       <CategoriesShowcase />
+      <FeaturedProducts products={products} unavailable={unavailable} />
       <Newsletter />
     </>
   )

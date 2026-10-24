@@ -1,72 +1,64 @@
-import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
+import { ArrowRight, ArrowUpRight } from "lucide-react"
 
 export function Hero() {
   return (
-    <section className="relative h-[100svh] min-h-[600px] overflow-hidden">
-      {/* Background image */}
-      <div className="absolute inset-0">
-        <div
-          className="h-full w-full bg-cover bg-center"
-          style={{
-            backgroundImage:
-              "url('https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1920&q=80')",
-          }}
-        />
-        {/* Dark gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70" />
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center text-white">
-        {/* Eyebrow */}
-        <p className="text-xs font-medium tracking-luxury text-white/70">
-          NEW COLLECTION 2026
+    <section className="store-shell home-hero" aria-labelledby="hero-title">
+      <div className="hero-copy">
+        <p className="eyebrow">
+          <span className="size-1.5 rounded-full bg-primary" /> The everyday
+          edit / 2026
         </p>
-
-        {/* Main heading */}
-        <h1 className="mt-6 font-serif text-5xl font-bold leading-[1.1] tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
-          Elevate Your
+        <h1 id="hero-title">
+          Less, but
           <br />
-          <span className="gold-shimmer">Style</span>
+          <span className="hero-serif">better.</span>
         </h1>
-
-        {/* Subtitle */}
-        <p className="mx-auto mt-6 max-w-lg text-base leading-relaxed text-white/70 sm:text-lg">
-          Curated collections of premium goods, crafted by artisans
-          who believe in the beauty of lasting quality.
+        <p className="hero-description">
+          Good design belongs in your everyday.
+          <br className="hidden sm:block" /> Discover clothing, bags and objects
+          worth keeping.
         </p>
-
-        {/* CTA buttons */}
-        <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row">
-          <Button
-            asChild
-            size="lg"
-            className="h-12 rounded-none bg-white px-8 text-sm font-medium tracking-wide-luxury text-black hover:bg-white/90"
-          >
-            <Link href="/products">
-              SHOP COLLECTION
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-          <Button
-            asChild
-            variant="outline"
-            size="lg"
-            className="h-12 rounded-none border-white/30 bg-transparent px-8 text-sm font-medium tracking-wide-luxury text-white hover:bg-white/10"
-          >
-            <Link href="/categories/outerwear">EXPLORE</Link>
-          </Button>
+        <div className="mt-8 flex flex-wrap items-center gap-5">
+          <Link href="/products" className="store-cta">
+            Explore the collection <ArrowUpRight className="size-4" />
+          </Link>
+          <Link href="#collections" className="text-link">
+            Find your everyday <ArrowRight className="size-4" />
+          </Link>
         </div>
-
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-          <div className="flex flex-col items-center gap-2">
-            <span className="text-[10px] tracking-luxury text-white/40">SCROLL</span>
-            <div className="h-8 w-px bg-gradient-to-b from-white/40 to-transparent" />
+        <div className="hero-footnote">
+          <span className="hero-footnote-line" />
+          <span>Considered details. A fresh perspective.</span>
+        </div>
+      </div>
+      <div className="hero-visual">
+        <Image
+          src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=1400&q=85"
+          alt="Terracotta jacket with considered everyday details"
+          fill
+          priority
+          sizes="(max-width: 767px) 100vw, 55vw"
+          className="object-cover"
+        />
+        <div className="hero-image-top">
+          <span className="glass-tag">THE DAILY UNIFORM</span>
+          <span className="text-xs text-white">01 / THE EDIT</span>
+        </div>
+        <Link href="/categories/outerwear" className="hero-image-caption">
+          <div>
+            <span className="block text-[10px] uppercase tracking-[0.16em] opacity-75">
+              Easy layers, any day
+            </span>
+            <span className="mt-1 block text-xl font-medium">
+              Made for the in-between.
+            </span>
           </div>
-        </div>
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-full border border-white/40">
+            <ArrowUpRight className="size-5" />
+          </span>
+        </Link>
       </div>
     </section>
   )

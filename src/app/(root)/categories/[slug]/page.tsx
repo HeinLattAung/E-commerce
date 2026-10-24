@@ -26,13 +26,13 @@ export default async function CategoryPage({ params }: Props) {
   const products = category.products.filter((p) => p.isActive)
 
   return (
-    <div className="container mx-auto px-4 pt-32 pb-12 lg:pt-36 lg:pb-20">
+    <div className="store-shell catalog-page">
       {/* Header */}
-      <div className="mx-auto max-w-2xl text-center">
+      <div className="catalog-heading">
         <p className="text-xs font-medium tracking-luxury text-muted-foreground">
           COLLECTION
         </p>
-        <h1 className="mt-3 font-serif text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+        <h1 className="mt-3 text-4xl font-medium tracking-tight sm:text-5xl">
           {category.name}
         </h1>
         {category.description && (
@@ -50,7 +50,7 @@ export default async function CategoryPage({ params }: Props) {
           <p className="mt-10 text-sm text-muted-foreground">
             {products.length} {products.length === 1 ? "piece" : "pieces"}
           </p>
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-x-6 sm:gap-y-10 md:grid-cols-3 lg:grid-cols-4">
+          <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

@@ -1,9 +1,16 @@
 export default function Loading() {
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="flex flex-col items-center gap-4">
-        <div className="font-serif text-2xl font-bold tracking-tight">LUXE</div>
-        <div className="h-px w-12 animate-pulse bg-foreground/20" />
+    <div
+      role="status"
+      aria-label="Loading the store"
+      className="flex min-h-screen items-center justify-center"
+    >
+      <div className="flex flex-col items-center gap-5">
+        <span className="text-3xl font-semibold tracking-[-0.08em]">luxe.</span>
+        <span className="h-px w-12 animate-pulse bg-primary/40" />
+        <span className="text-xs text-muted-foreground">
+          Finding your everyday…
+        </span>
       </div>
     </div>
   )

@@ -1,53 +1,56 @@
-"use client"
-
+import Link from "next/link"
+import { ArrowUpRight, PackageOpen } from "lucide-react"
 import { ProductCard } from "@/components/product/product-card"
 import type { ProductWithCategory } from "@/types"
-
 interface FeaturedProductsProps {
   products: ProductWithCategory[]
   unavailable?: boolean
 }
-
-export function FeaturedProducts({ products, unavailable = false }: FeaturedProductsProps) {
-  if (!products || products.length === 0) {
-    return (
-      <section className="container mx-auto px-4 py-20 lg:py-28">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="font-serif text-3xl font-bold tracking-tight sm:text-4xl">
-            Featured Pieces
-          </h2>
-          <p role="status" className="mt-3 text-muted-foreground">
-            {unavailable
-              ? "We couldn't load featured products right now. Please try again later."
-              : "No products found."}
-          </p>
-        </div>
-      </section>
-    )
-  }
-
+export function FeaturedProducts({
+  products,
+  unavailable = false,
+}: FeaturedProductsProps) {
   return (
-    <section className="container mx-auto px-4 py-20 lg:py-28">
-      {/* Section header */}
-      <div className="mx-auto max-w-2xl text-center">
-        <p className="text-xs font-medium tracking-luxury text-muted-foreground">
-          CURATED SELECTION
-        </p>
-        <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight sm:text-4xl">
-          Featured Pieces
-        </h2>
-        <p className="mt-3 text-muted-foreground">
-          Handpicked by our editors for exceptional craft and timeless design.
-        </p>
-      </div>
-
-      {/* Product grid */}
-      <div className="mt-14 grid grid-cols-2 gap-3 sm:gap-x-6 sm:gap-y-10 md:grid-cols-3 lg:grid-cols-4">
-        {products.map((product) => (
-          <div key={product.id} className="fade-in-up">
-            <ProductCard product={product} />
+    <section className="featured-section section-space">
+      <div className="store-shell">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">On our radar</p>
+            <h2>A few good finds.</h2>
           </div>
-        ))}
+          <Link href="/products" className="text-link">
+            View the collection <ArrowUpRight className="size-4" />
+          </Link>
+        </div>
+        {products.length ? (
+          <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <div role="status" className="catalog-empty glass-surface">
+            <PackageOpen
+              className="size-7 text-muted-foreground"
+              strokeWidth={1.2}
+            />
+            <div>
+              <h3 className="font-medium">
+                {unavailable
+                  ? "The edit is taking a moment."
+                  : "Something good is on its way."}
+              </h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                {unavailable
+                  ? "We couldn't load featured products right now. Please try again later."
+                  : "There are no featured pieces right now. Explore the collections above."}
+              </p>
+            </div>
+            <Link href="/#collections" className="text-link shrink-0">
+              Explore collections <ArrowUpRight className="size-4" />
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   )

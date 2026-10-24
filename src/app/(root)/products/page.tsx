@@ -1,15 +1,17 @@
 import { getProducts } from "@/actions/product.actions"
 import { getCategories } from "@/actions/category.actions"
 import { ProductCard } from "@/components/product/product-card"
+import { CatalogRetry } from "@/components/product/catalog-retry"
+import { CatalogControls } from "@/components/product/catalog-controls"
 import Link from "next/link"
-import { cn } from "@/lib/utils"
+import { ArrowLeft, ArrowRight, PackageOpen } from "lucide-react"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Shop All",
-  description: "Browse our full collection of premium goods",
+  title: "The collection",
+  description:
+    "Explore clothing, bags, footwear and everyday essentials at LuxeStore.",
 }
-
 interface Props {
   searchParams: Promise<{
     page?: string
@@ -18,130 +20,126 @@ interface Props {
     sort?: string
   }>
 }
-
 export default async function ProductsPage({ searchParams }: Props) {
   const params = await searchParams
-  const page = Number(params.page) || 1
+  const page = Math.max(1, Math.floor(Number(params.page) || 1))
   const sort = params.sort || "featured"
-
-  const [categories, { products, totalPages, currentPage }] = await Promise.all([
-    getCategories(),
-    getProducts({
-      page,
-      categoryId: params.category,
-      query: params.q,
-      sort,
-    }),
-  ])
-
-  const sortOptions = [
-    { value: "featured", label: "Featured" },
-    { value: "newest", label: "Newest" },
-    { value: "price-asc", label: "Price: Low to High" },
-    { value: "price-desc", label: "Price: High to Low" },
-    { value: "best-selling", label: "Best Selling" },
-  ]
-
+  let categories: Awaited<ReturnType<typeof getCategories>> = []
+  let catalog: Awaited<ReturnType<typeof getProducts>> = {
+    products: [],
+    totalPages: 0,
+    currentPage: page,
+  }
+  let unavailable = false
+  try {
+    ;[categories, catalog] = await Promise.all([
+      getCategories(),
+      getProducts({ page, categoryId: params.category, query: params.q, sort }),
+    ])
+  } catch (error) {
+    unavailable = true
+    console.error("Collection unavailable", {
+      type: error instanceof Error ? error.name : "UnknownError",
+    })
+  }
+  const { products, totalPages, currentPage } = catalog
+  function pageHref(nextPage: number) {
+    const query = new URLSearchParams()
+    query.set("page", String(nextPage))
+    if (params.q) query.set("q", params.q)
+    if (params.category) query.set("category", params.category)
+    if (params.sort) query.set("sort", params.sort)
+    return `/products?${query}`
+  }
   return (
-    <div className="container mx-auto px-4 pt-32 pb-12 lg:pt-36 lg:pb-20">
-      {/* Header */}
-      <div className="mx-auto max-w-2xl text-center">
-        <p className="text-xs font-medium tracking-luxury text-muted-foreground">
-          OUR COLLECTION
-        </p>
-        <h1 className="mt-3 font-serif text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
-          {params.q ? `Results for "${params.q}"` : "Shop All"}
-        </h1>
-      </div>
-
-      {/* Filters bar */}
-      <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-b pb-4">
-        {/* Category filter */}
-        <div className="flex flex-wrap items-center gap-2">
-          <Link
-            href="/products"
-            className={cn(
-              "rounded-full border px-4 py-1.5 text-xs font-medium transition-colors",
-              !params.category
-                ? "border-foreground bg-foreground text-background"
-                : "border-border hover:border-foreground"
-            )}
-          >
-            All
-          </Link>
-          {categories.map((cat) => (
-            <Link
-              key={cat.id}
-              href={`/products?category=${cat.id}${params.sort ? `&sort=${params.sort}` : ""}`}
-              className={cn(
-                "rounded-full border px-4 py-1.5 text-xs font-medium transition-colors",
-                params.category === cat.id
-                  ? "border-foreground bg-foreground text-background"
-                  : "border-border hover:border-foreground"
-              )}
-            >
-              {cat.name}
-            </Link>
-          ))}
+    <main className="store-shell catalog-page">
+      <Link href="/" className="text-link text-muted-foreground">
+        <ArrowLeft className="size-3.5" /> Back to home
+      </Link>
+      <div className="catalog-heading">
+        <div>
+          <p className="eyebrow">Considered, from the start</p>
+          <h1>{params.q ? `Results for “${params.q}”` : "The collection."}</h1>
         </div>
-
-        {/* Sort */}
-        <div className="flex items-center gap-2">
-          <span className="hidden text-xs text-muted-foreground sm:inline">Sort by:</span>
-          <div className="flex flex-wrap gap-1">
-            {sortOptions.map((opt) => (
-              <Link
-                key={opt.value}
-                href={`/products?${params.category ? `category=${params.category}&` : ""}sort=${opt.value}`}
-                className={cn(
-                  "rounded-full px-3 py-1 text-xs transition-colors",
-                  sort === opt.value
-                    ? "bg-secondary font-medium"
-                    : "text-muted-foreground hover:text-foreground"
-                )}
-              >
-                {opt.label}
-              </Link>
+        <p>
+          Everyday pieces. A lasting place
+          <br className="hidden sm:block" /> in your wardrobe.
+        </p>
+      </div>
+      {!unavailable && (
+        <CatalogControls
+          categories={categories}
+          category={params.category}
+          query={params.q}
+          sort={sort}
+        />
+      )}
+      {products.length > 0 ? (
+        <>
+          <p className="my-6 text-xs text-muted-foreground">
+            Showing {products.length}{" "}
+            {products.length === 1 ? "piece" : "pieces"}
+            {params.q && (
+              <>
+                {" "}
+                ·{" "}
+                <Link href="/products" className="underline underline-offset-4">
+                  Clear search
+                </Link>
+              </>
+            )}
+          </p>
+          <div className="grid grid-cols-2 gap-x-4 gap-y-6 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
             ))}
           </div>
-        </div>
-      </div>
-
-      {/* Results count */}
-      <p className="mt-6 text-sm text-muted-foreground">
-        {products.length === 0
-          ? "No products found"
-          : `Showing ${products.length} ${products.length === 1 ? "piece" : "pieces"}`}
-      </p>
-
-      {/* Product grid */}
-      {products.length > 0 && (
-        <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-x-6 sm:gap-y-10 md:grid-cols-3 lg:grid-cols-4">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+        </>
+      ) : (
+        <div role="status" className="catalog-empty glass-surface mt-8">
+          <PackageOpen
+            className="size-8 shrink-0 text-muted-foreground"
+            strokeWidth={1.2}
+          />
+          <div>
+            <h2 className="text-lg font-medium">
+              {unavailable
+                ? "We can't reach the collection just yet."
+                : "No pieces found, for now."}
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {unavailable
+                ? "Please try again in a moment. Your saved pieces and bag are still here."
+                : "Try a different search or explore another collection."}
+            </p>
+          </div>
+          {unavailable ? (
+            <CatalogRetry />
+          ) : (
+            <Link href="/products?sort=newest" className="text-link">
+              Explore all pieces <ArrowRight className="size-4" />
+            </Link>
+          )}
         </div>
       )}
-
-      {/* Pagination */}
       {totalPages > 1 && (
-        <div className="mt-12 flex items-center justify-center gap-2">
+        <nav
+          aria-label="Product pages"
+          className="mt-12 flex flex-wrap items-center justify-center gap-2"
+        >
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
             <Link
               key={p}
-              href={`/products?page=${p}${params.category ? `&category=${params.category}` : ""}${params.sort ? `&sort=${params.sort}` : ""}`}
-              className={cn(
-                "flex h-10 w-10 items-center justify-center rounded-full text-sm transition-colors",
-                p === currentPage
-                  ? "bg-foreground text-background"
-                  : "border hover:border-foreground"
-              )}
+              href={pageHref(p)}
+              aria-label={`Page ${p}`}
+              aria-current={p === currentPage ? "page" : undefined}
+              className={`flex size-11 items-center justify-center rounded-full border text-sm ${p === currentPage ? "bg-primary text-primary-foreground" : "hover:bg-secondary"}`}
             >
               {p}
             </Link>
           ))}
-        </div>
+        </nav>
       )}
-    </div>
+    </main>
   )
 }

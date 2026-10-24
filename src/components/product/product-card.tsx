@@ -19,22 +19,28 @@ export function ProductCard({ product }: ProductCardProps) {
 
   const primaryImage = product.images[0]
   const secondaryImage = product.images[1]
-  const lowestVariant = product.variants.reduce((min, v) =>
-    v.price < min.price ? v : min
-  , product.variants[0])
-  const hasDiscount = lowestVariant?.comparePrice && lowestVariant.comparePrice > lowestVariant.price
+  const lowestVariant = product.variants.reduce(
+    (min, v) => (v.price < min.price ? v : min),
+    product.variants[0],
+  )
+  const hasDiscount =
+    lowestVariant?.comparePrice &&
+    lowestVariant.comparePrice > lowestVariant.price
 
   return (
-    <div className="group relative overflow-hidden rounded-lg border border-border bg-white shadow-sm transition-shadow hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900">
+    <div className="product-tile group relative">
       <Link href={`/products/${product.slug}`} className="block" scroll>
         {/* Image container */}
-        <div className="relative aspect-square overflow-hidden bg-muted">
+        <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-muted">
           {/* Primary image */}
           <Image
             src={primaryImage?.url || "/placeholder.svg"}
             alt={primaryImage?.alt || product.name}
             fill
-            className="object-cover transition-all duration-500 group-hover:opacity-0"
+            className={cn(
+              "object-cover transition-all duration-500",
+              secondaryImage && "group-hover:opacity-0",
+            )}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
           {/* Secondary image on hover */}
@@ -51,7 +57,10 @@ export function ProductCard({ product }: ProductCardProps) {
           {/* Badges */}
           <div className="absolute left-2 top-2 flex flex-col gap-1.5 sm:left-3 sm:top-3">
             {product.featured && (
-              <Badge variant="secondary" className="bg-neutral-100 text-xs font-normal text-neutral-800 dark:bg-neutral-800 dark:text-neutral-100">
+              <Badge
+                variant="secondary"
+                className="bg-neutral-100 text-xs font-normal text-neutral-800 dark:bg-neutral-800 dark:text-neutral-100"
+              >
                 Featured
               </Badge>
             )}
@@ -63,17 +72,21 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
 
           {/* Quick view overlay */}
-          <div className="absolute inset-x-0 bottom-0 translate-y-full bg-black/80 py-3 text-center transition-transform duration-300 group-hover:translate-y-0">
-            <span className="text-xs font-medium tracking-wide-luxury text-white">
+          <div className="absolute inset-x-3 bottom-3 hidden translate-y-16 rounded-xl bg-background/90 py-3 text-center backdrop-blur-md transition-transform duration-300 group-hover:translate-y-0 group-focus-within:translate-y-0 sm:block">
+            <span className="text-xs font-medium tracking-wide-luxury text-foreground">
               VIEW DETAILS
             </span>
           </div>
         </div>
 
         {/* Info */}
-        <div className="p-3 sm:p-4">
-          <p className="text-[10px] text-muted-foreground sm:text-xs">{product.category.name}</p>
-          <h3 className="mt-0.5 text-xs font-medium leading-snug sm:text-sm">{product.name}</h3>
+        <div className="px-0.5 py-4">
+          <p className="text-[10px] text-muted-foreground sm:text-xs">
+            {product.category.name}
+          </p>
+          <h3 className="mt-0.5 text-xs font-medium leading-snug sm:text-sm">
+            {product.name}
+          </h3>
           <div className="mt-1 flex items-center gap-1.5 sm:gap-2">
             <span className="text-xs font-medium sm:text-sm">
               {formatPrice(lowestVariant?.price ?? product.basePrice)}
@@ -87,7 +100,8 @@ export function ProductCard({ product }: ProductCardProps) {
           {/* Color count hint */}
           {product.variants.length > 1 && (
             <p className="mt-0.5 text-[10px] text-muted-foreground sm:text-xs">
-              {new Set(product.variants.map((v) => v.color)).size} colors available
+              {new Set(product.variants.map((v) => v.color)).size} colors
+              available
             </p>
           )}
         </div>
@@ -97,14 +111,17 @@ export function ProductCard({ product }: ProductCardProps) {
       <button
         onClick={(e) => {
           e.preventDefault()
-          wishlisted ? removeItem(product.id) : addItem(product.id)
+          if (wishlisted) removeItem(product.id)
+          else addItem(product.id)
         }}
-        className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 backdrop-blur-sm transition-all hover:bg-white hover:scale-110 sm:right-3 sm:top-3 sm:h-8 sm:w-8"
+        aria-label={`${wishlisted ? "Remove" : "Save"} ${product.name} ${wishlisted ? "from" : "to"} wishlist`}
+        aria-pressed={wishlisted}
+        className="absolute right-2 top-2 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/60 bg-background/85 backdrop-blur-md transition-colors hover:bg-background"
       >
         <Heart
           className={cn(
             "h-3.5 w-3.5 transition-colors sm:h-4 sm:w-4",
-            wishlisted ? "fill-red-500 text-red-500" : "text-muted-foreground"
+            wishlisted ? "fill-red-500 text-red-500" : "text-muted-foreground",
           )}
         />
       </button>

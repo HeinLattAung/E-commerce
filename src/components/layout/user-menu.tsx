@@ -21,7 +21,7 @@ export function UserMenu() {
   // Loading state
   if (status === "loading") {
     return (
-      <Button variant="ghost" size="icon" disabled>
+      <Button variant="ghost" size="icon" aria-label="Loading account" disabled>
         <User className="h-[18px] w-[18px]" strokeWidth={1.5} />
       </Button>
     )
@@ -31,7 +31,7 @@ export function UserMenu() {
   if (!session?.user) {
     return (
       <Button variant="ghost" size="icon" asChild>
-        <Link href="/login">
+        <Link href="/login" aria-label="Sign in">
           <User className="h-[18px] w-[18px]" strokeWidth={1.5} />
         </Link>
       </Button>
@@ -41,16 +41,29 @@ export function UserMenu() {
   // Signed in — show dropdown
   const user = session.user
   const initials = user.name
-    ? user.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
+    ? user.name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2)
     : "U"
   const isAdmin = user.role === "ADMIN"
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative">
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Your account"
+          className="relative"
+        >
           <Avatar className="h-7 w-7">
-            <AvatarImage src={user.image || undefined} alt={user.name || "User"} />
+            <AvatarImage
+              src={user.image || undefined}
+              alt={user.name || "User"}
+            />
             <AvatarFallback className="text-[10px]">{initials}</AvatarFallback>
           </Avatar>
         </Button>

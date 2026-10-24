@@ -3,7 +3,14 @@
 import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+  SheetDescription,
+} from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { ShoppingBag, Minus, Plus, X, ArrowRight } from "lucide-react"
@@ -58,7 +65,13 @@ function CartItemRow({ item }: { item: CartItem }) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 rounded-full border px-1">
             <button
-              onClick={() => updateQuantity(item.productId, item.variantSku, Math.max(1, item.quantity - 1))}
+              onClick={() =>
+                updateQuantity(
+                  item.productId,
+                  item.variantSku,
+                  Math.max(1, item.quantity - 1),
+                )
+              }
               className="p-1 text-muted-foreground transition-colors hover:text-foreground disabled:opacity-30"
               disabled={item.quantity <= 1}
             >
@@ -68,14 +81,22 @@ function CartItemRow({ item }: { item: CartItem }) {
               {item.quantity}
             </span>
             <button
-              onClick={() => updateQuantity(item.productId, item.variantSku, Math.min(item.stock, item.quantity + 1))}
+              onClick={() =>
+                updateQuantity(
+                  item.productId,
+                  item.variantSku,
+                  Math.min(item.stock, item.quantity + 1),
+                )
+              }
               className="p-1 text-muted-foreground transition-colors hover:text-foreground disabled:opacity-30"
               disabled={item.quantity >= item.stock}
             >
               <Plus className="h-3 w-3" />
             </button>
           </div>
-          <span className="text-sm font-medium">{formatPrice(item.price * item.quantity)}</span>
+          <span className="text-sm font-medium">
+            {formatPrice(item.price * item.quantity)}
+          </span>
         </div>
       </div>
     </motion.div>
@@ -89,7 +110,12 @@ export function CartSheet() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative">
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Open shopping bag"
+          className="relative"
+        >
           <ShoppingBag className="h-[18px] w-[18px]" strokeWidth={1.5} />
           {totalItems() > 0 && (
             <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground">
@@ -101,6 +127,9 @@ export function CartSheet() {
 
       <SheetContent className="flex w-full flex-col sm:max-w-md">
         <SheetHeader>
+          <SheetDescription className="sr-only">
+            Review items and continue to checkout.
+          </SheetDescription>
           <SheetTitle className="font-serif text-xl">
             Your Bag ({totalItems()})
           </SheetTitle>
@@ -108,7 +137,10 @@ export function CartSheet() {
 
         {items.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-4 px-4 text-center">
-            <ShoppingBag className="h-12 w-12 text-muted-foreground/40" strokeWidth={1} />
+            <ShoppingBag
+              className="h-12 w-12 text-muted-foreground/40"
+              strokeWidth={1}
+            />
             <div>
               <p className="font-medium">Your bag is empty</p>
               <p className="mt-1 text-sm text-muted-foreground">
@@ -143,7 +175,11 @@ export function CartSheet() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Shipping</span>
-                  <span>{shippingPrice === 0 ? "Complimentary" : formatPrice(shippingPrice)}</span>
+                  <span>
+                    {shippingPrice === 0
+                      ? "Complimentary"
+                      : formatPrice(shippingPrice)}
+                  </span>
                 </div>
               </div>
               <Separator className="my-3" />
@@ -151,13 +187,23 @@ export function CartSheet() {
                 <span>Total</span>
                 <span>{formatPrice(totalPrice)}</span>
               </div>
-              <Button asChild className="mt-4 w-full" size="lg" onClick={() => setOpen(false)}>
+              <Button
+                asChild
+                className="mt-4 w-full"
+                size="lg"
+                onClick={() => setOpen(false)}
+              >
                 <Link href="/checkout">
                   Proceed to Checkout
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild variant="link" className="mt-1 w-full text-muted-foreground" onClick={() => setOpen(false)}>
+              <Button
+                asChild
+                variant="link"
+                className="mt-1 w-full text-muted-foreground"
+                onClick={() => setOpen(false)}
+              >
                 <Link href="/cart">View Full Cart</Link>
               </Button>
             </div>

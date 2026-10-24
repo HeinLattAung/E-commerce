@@ -2,10 +2,17 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Menu, ArrowRight } from "lucide-react"
+import { ThemeToggle } from "@/components/shared/theme-toggle"
 import { Logo } from "@/components/shared/logo"
 
 const menuLinks = [
@@ -18,6 +25,7 @@ const menuLinks = [
 ]
 
 const accountLinks = [
+  { href: "/wishlist", label: "Saved pieces" },
   { href: "/login", label: "Sign In" },
   { href: "/orders", label: "My Orders" },
   { href: "/profile", label: "Profile" },
@@ -29,11 +37,20 @@ export function MobileNav() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="lg:hidden">
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Open navigation"
+          className="lg:hidden"
+        >
           <Menu className="h-5 w-5" strokeWidth={1.5} />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-80 p-0">
+      <SheetContent side="left" className="w-[min(88vw,360px)] p-0">
+        <SheetTitle className="sr-only">Navigation</SheetTitle>
+        <SheetDescription className="sr-only">
+          Browse collections and manage your account.
+        </SheetDescription>
         <div className="flex h-full flex-col">
           <div className="flex items-center px-6 pt-6 pb-4">
             <Logo />
@@ -72,6 +89,10 @@ export function MobileNav() {
               </Link>
             ))}
           </nav>
+          <div className="flex items-center justify-between border-t px-6 py-4 text-sm">
+            <span>Appearance</span>
+            <ThemeToggle />
+          </div>
         </div>
       </SheetContent>
     </Sheet>
