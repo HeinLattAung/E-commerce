@@ -49,6 +49,12 @@ export default function LoginPage() {
         Sign in to your account to continue.
       </p>
 
+      {searchParams.get("registered") === "true" && (
+        <p role="status" className="mt-4 text-sm text-muted-foreground">
+          Your account has been created. Please sign in to continue.
+        </p>
+      )}
+
       {/* Google sign-in */}
       <form action={loginWithGoogle} className="mt-8">
         <Button variant="outline" className="w-full" type="submit">
@@ -109,6 +115,8 @@ export default function LoginPage() {
             />
             <button
               type="button"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-controls="password"
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
             >

@@ -5,9 +5,10 @@ import type { ProductWithCategory } from "@/types"
 
 interface FeaturedProductsProps {
   products: ProductWithCategory[]
+  unavailable?: boolean
 }
 
-export function FeaturedProducts({ products }: FeaturedProductsProps) {
+export function FeaturedProducts({ products, unavailable = false }: FeaturedProductsProps) {
   if (!products || products.length === 0) {
     return (
       <section className="container mx-auto px-4 py-20 lg:py-28">
@@ -15,7 +16,11 @@ export function FeaturedProducts({ products }: FeaturedProductsProps) {
           <h2 className="font-serif text-3xl font-bold tracking-tight sm:text-4xl">
             Featured Pieces
           </h2>
-          <p className="mt-3 text-muted-foreground">No products found.</p>
+          <p role="status" className="mt-3 text-muted-foreground">
+            {unavailable
+              ? "We couldn't load featured products right now. Please try again later."
+              : "No products found."}
+          </p>
         </div>
       </section>
     )

@@ -5,6 +5,7 @@ import { db } from "@/lib/db"
 import bcrypt from "bcryptjs"
 import { loginSchema, registerSchema } from "@/lib/validators"
 import { AuthError } from "next-auth"
+import { Prisma } from "@prisma/client"
 
 export async function login(email: string, password: string) {
   const parsed = loginSchema.safeParse({ email, password })
@@ -47,36 +48,48 @@ export async function register(data: {
     return { success: false, error: validated.error.issues[0].message }
   }
 
-  const existing = await db.user.findUnique({
-    where: { email: data.email },
-  })
+  const { name, email, password } = validated.data
 
-  if (existing) {
-    return { success: false, error: "An account with this email already exists" }
+  try {
+    const existing = await db.user.findUnique({ where: { email } })
+    if (existing) {
+      return { success: false, error: "An account with this email already exists" }
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12)
+    await db.user.create({
+      data: { name, email, password: hashedPassword },
+    })
+  } catch (error) {
+    // A concurrent signup can create the email after the lookup above.
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+      return { success: false, error: "An account with this email already exists" }
+    }
+
+    // Log diagnostics without passwords, connection strings, or user input.
+    console.error("Registration database operation failed", {
+      code: error instanceof Prisma.PrismaClientKnownRequestError ? error.code : undefined,
+      type: error instanceof Error ? error.name : "UnknownError",
+    })
+    return {
+      success: false,
+      error: "We couldn't create your account right now. Please try again later.",
+    }
   }
-
-  const hashedPassword = await bcrypt.hash(data.password, 12)
-
-  await db.user.create({
-    data: {
-      name: data.name,
-      email: data.email,
-      password: hashedPassword,
-    },
-  })
 
   // Auto sign-in after registration
   try {
     await signIn("credentials", {
-      email: data.email,
-      password: data.password,
+      email,
+      password,
       redirect: false,
     })
   } catch {
-    // Sign-in failed after registration — user can sign in manually
+    // The account exists; do not ask the customer to register again.
+    return { success: true, redirectTo: "/login?registered=true" }
   }
 
-  return { success: true }
+  return { success: true, redirectTo: "/" }
 }
 
 export async function logout() {

@@ -36,12 +36,16 @@ export default function RegisterPage() {
     }
 
     startTransition(async () => {
-      const result = await register(form)
-      if (result.success) {
-        router.push("/")
-        router.refresh()
-      } else {
-        setError(result.error || "Something went wrong")
+      try {
+        const result = await register(form)
+        if (result.success) {
+          router.push(result.redirectTo || "/")
+          router.refresh()
+        } else {
+          setError(result.error || "Something went wrong")
+        }
+      } catch {
+        setError("Unable to contact the server. Please try again.")
       }
     })
   }
@@ -78,7 +82,7 @@ export default function RegisterPage() {
       {/* Registration form */}
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <div className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
+          <div role="alert" className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
             {error}
           </div>
         )}
@@ -127,6 +131,8 @@ export default function RegisterPage() {
             />
             <button
               type="button"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-controls="password"
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
             >
@@ -151,6 +157,8 @@ export default function RegisterPage() {
             />
             <button
               type="button"
+              aria-label={showConfirm ? "Hide confirm password" : "Show confirm password"}
+              aria-controls="confirmPassword"
               onClick={() => setShowConfirm(!showConfirm)}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
             >
